@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Revisión de resultados y seguridad de los datos</title>
+<style>
+
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap');
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Montserrat', sans-serif; background: #f0f2f5; color: #333; }
+    .slide { width: 100%; max-width: 1024px; margin: 20px auto; background: #fff; border-radius: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.12); overflow: hidden; min-height: 500px; display: flex; flex-direction: column; }
+    .slide-header { background: #3d5a96; padding: 18px 30px; display: flex; align-items: center; justify-content: space-between; }
+    .slide-header h2 { color: #fff; font-size: 20px; font-weight: 700; }
+    .slide-header .num { color: rgba(255,255,255,0.6); font-size: 14px; }
+    .slide-body { padding: 30px; flex: 1; }
+    .slide-footer { background: #2e4575; padding: 10px 30px; display: flex; justify-content: space-between; color: rgba(255,255,255,0.7); font-size: 12px; }
+    .portada { min-height: 90vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; position: relative; overflow: hidden; }
+    .portada-bg { position: absolute; inset: 0; background: linear-gradient(135deg, #3d5a96 0%, #e8755c 50%, #d05a7e 100%); z-index: 0; }
+    .portada .franja1 { position: absolute; bottom: 0; left: 0; right: 0; height: 12px; background: #e8755c; z-index: 1; }
+    .portada .franja2 { position: absolute; top: 0; right: 0; width: 25%; height: 8%; background: #d05a7e; z-index: 1; }
+    .portada .franja3 { position: absolute; bottom: 0; left: 0; width: 10%; height: 18%; background: #d05a7e; z-index: 1; }
+    .portada .franja4 { position: absolute; bottom: 0; right: 0; width: 15%; height: 12%; background: #e8755c; z-index: 1; }
+    .portada-content { position: relative; z-index: 2; padding: 40px; }
+    .portada .campus { color: rgba(255,255,255,0.7); font-size: 13px; letter-spacing: 4px; font-weight: 700; margin-bottom: 40px; }
+    .portada h1 { color: #fff; font-size: 48px; font-weight: 900; line-height: 1.2; margin-bottom: 8px; text-shadow: 3px 3px 12px rgba(0,0,0,0.2); }
+    .portada h1 span { display: block; font-size: 32px; font-weight: 600; }
+    .portada .tema-label { color: rgba(255,255,255,0.85); font-size: 18px; margin-top: 50px; }
+    .portada .tema { color: #fff; font-size: 28px; font-weight: 700; margin-top: 8px; }
+    .portada .instituto { color: rgba(255,255,255,0.75); font-size: 15px; margin-top: 50px; }
+    .portada .fecha { color: rgba(255,255,255,0.55); font-size: 13px; margin-top: 10px; }
+    h3 { color: #3d5a96; font-size: 22px; margin-bottom: 20px; }
+    h4 { color: #3d5a96; font-size: 18px; margin-bottom: 12px; }
+    .block { background: #fdf4f0; border-left: 5px solid #e8755c; padding: 18px 20px; border-radius: 0 10px 10px 0; margin: 15px 0; }
+    .block-title { font-weight: 700; color: #e8755c; margin-bottom: 6px; }
+    .block-blue { background: #eff2f8; border-left: 5px solid #3d5a96; }
+    .block-blue .block-title { color: #3d5a96; }
+    .block-pink { background: #fdf0f4; border-left: 5px solid #d05a7e; }
+    .block-pink .block-title { color: #d05a7e; }
+    .block-vino { background: #fdf0f2; border-left: 5px solid #691b31; }
+    .block-vino .block-title { color: #691b31; }
+    ul, ol { padding-left: 22px; line-height: 2; }
+    li { margin-bottom: 4px; }
+    .columns { display: flex; gap: 30px; }
+    .columns > div { flex: 1; }
+    table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+    th, td { border: 1px solid #ddd; padding: 10px 14px; text-align: left; }
+    th { background: #3d5a96; color: #fff; }
+    tr:nth-child(even) { background: #f8f9fc; }
+    .tag { display: inline-block; background: #3d5a96; color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-right: 6px; }
+    .center { text-align: center; }
+    .final { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; text-align: center; }
+    .final h2 { color: #3d5a96; font-size: 32px; margin-bottom: 20px; }
+    .final p { color: #666; font-size: 18px; }
+    .nav-bar { max-width: 1024px; margin: 10px auto; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+    .nav-bar button { background: #3d5a96; color: #fff; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 13px; transition: all 0.2s; }
+    .nav-bar button:hover { background: #e8755c; transform: translateY(-2px); }
+    .nav-bar button.activo { background: #d05a7e; }
+    .nav-controls { max-width: 1024px; margin: 10px auto; display: flex; gap: 10px; justify-content: center; }
+    .nav-controls button { background: #3d5a96; color: #fff; border: none; padding: 10px 28px; border-radius: 25px; cursor: pointer; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 15px; transition: all 0.2s; }
+    .nav-controls button:hover { background: #e8755c; transform: scale(1.05); }
+    .counter { max-width: 1024px; margin: 5px auto; text-align: center; font-size: 13px; color: #888; }
+    @media (max-width: 768px) {
+        .portada h1 { font-size: 32px; }
+        .portada h1 span { font-size: 24px; }
+        .portada .tema { font-size: 20px; }
+        .columns { flex-direction: column; }
+        .slide-body { padding: 20px; }
+        .slide-header h2 { font-size: 16px; }
+    }
+
+</style>
+</head>
+<body>
+
+<div class="nav-controls">
+    <button onclick="ant()">&#9664; Anterior</button>
+    <button onclick="sig()">Siguiente &#9654;</button>
+</div>
+<div class="counter" id="counter"></div>
+
+<div id="slides-container"></div>
+
+<script>
+const PORTADA = {
+    "etiqueta": "Tema 1.4 — Unidad 1",
+    "tema": "Revisión de resultados<br>y seguridad de los datos",
+    "instituto": "Instituto de Capacitación para el Trabajo del Estado de Hidalgo"
+};
+const slides = [
+    {
+        "tipo": "portada"
+    },
+    {
+        "titulo": "Índice",
+        "num": "2 / 33",
+        "body": "\n    <div class=\"columns\" style=\"font-size:18px;line-height:2.2;\">\n        <div><strong style=\"color:#3d5a96;\">1. Revisar</strong><br>\n        - Por qué revisar<br>\n        - Cálculos y textos<br>\n        - Datos inventados<br>\n        - Tabla de verificación<br><br>\n        <strong style=\"color:#3d5a96;\">2. Proteger</strong><br>\n        - Datos personales<br>\n        - App pública<br>\n        - Aviso de privacidad</div>\n        <div><strong style=\"color:#3d5a96;\">3. Documentar</strong><br>\n        - Evidencia<br>\n        - Checklist<br>\n        - Casos reales<br><br>\n        <strong style=\"color:#3d5a96;\">4. Practicar</strong><br>\n        - Política de datos<br>\n        - Actividad y rúbrica<br><br>\n        <strong style=\"color:#3d5a96;\">5. Cerrar</strong><br>\n        - Resumen y autoevaluación</div>\n    </div>\n    "
+    },
+    {
+        "titulo": "Objetivo de aprendizaje",
+        "num": "3 / 33",
+        "body": "\n    <p style=\"font-size:18px;line-height:1.7;margin-bottom:18px;\">Al terminar podrás <strong>revisar los resultados de tu app y proteger la información del negocio y de tus clientes</strong> antes de compartirla.</p>\n    <div class=\"block block-blue\">\n        <div class=\"block-title\">Lo que sabrás hacer</div>\n        <ul>\n            <li>Comprobar cálculos y textos con una tabla de verificación.</li>\n            <li>Detectar datos inventados por la IA.</li>\n            <li>Decidir qué información nunca debe estar en una app pública.</li>\n            <li>Documentar la revisión con evidencia.</li>\n        </ul>\n    </div>\n    "
+    },
+    {
+        "titulo": "¿Por qué revisar?",
+        "num": "4 / 33",
+        "body": "\n    <div class=\"columns\">\n        <div>\n            <strong style=\"color:#3d5a96;\">Razones</strong>\n            <ul>\n                <li>La IA puede equivocarse sin avisar.</li>\n                <li>Un precio mal calculado cuesta dinero.</li>\n                <li>Un dato expuesto cuesta confianza.</li>\n                <li>Tú respondes ante el cliente.</li>\n            </ul>\n        </div>\n        <div>\n            <strong style=\"color:#3d5a96;\">Beneficios</strong>\n            <ul>\n                <li>Detectas errores antes que el cliente.</li>\n                <li>Mejoras la app con cada revisión.</li>\n                <li>Documentas tu trabajo.</li>\n                <li>Ganas confianza para delegar más.</li>\n            </ul>\n        </div>\n    </div>\n    <div class=\"block block-vino\">\n        Revisar no es desconfiar de la IA: es parte del trabajo profesional.\n    </div>\n    "
+    },
+    {
+        "titulo": "Qué puede salir mal",
+        "num": "5 / 33",
+        "body": "\n    <table>\n        <tr><th>Tipo de error</th><th>Ejemplo</th><th>Consecuencia</th></tr>\n        <tr><td>Cálculo</td><td>Total sin IVA</td><td>Cobras de menos</td></tr>\n        <tr><td>Dato inventado</td><td>Precio que no existe</td><td>Cotización inválida</td></tr>\n        <tr><td>Texto</td><td>Nombre mal escrito</td><td>Mala impresión</td></tr>\n        <tr><td>Privacidad</td><td>Teléfono visible</td><td>Riesgo para el cliente</td></tr>\n        <tr><td>Diseño</td><td>Botón que no se ve</td><td>El cliente no puede usarla</td></tr>\n    </table>\n    "
+    },
+    {
+        "titulo": "Verificación de cálculos",
+        "num": "6 / 33",
+        "body": "\n    <ol style=\"font-size:17px;line-height:2.1;\">\n        <li>Elige tres casos: sencillo, con decimales y extremo.</li>\n        <li>Calcula el resultado esperado a mano o con calculadora.</li>\n        <li>Captura el mismo caso en la app.</li>\n        <li>Compara y anota la diferencia.</li>\n        <li>Si hay error, pide la corrección con el ejemplo exacto.</li>\n    </ol>\n    <div class=\"block block-blue\">\n        <div class=\"block-title\">Ejemplo</div>\n        Producto de 100, cantidad 2, IVA 16%: esperado 232. Si la app muestra 200, falta el IVA.\n    </div>\n    "
+    },
+    {
+        "titulo": "Verificación de textos",
+        "num": "7 / 33",
+        "body": "\n    <div class=\"columns\">\n        <div>\n            <strong style=\"color:#3d5a96;\">Revisa</strong>\n            <ul>\n                <li>Nombres y apellidos.</li>\n                <li>Precios y unidades.</li>\n                <li>Fechas y horarios.</li>\n                <li>Acentos y signos.</li>\n            </ul>\n        </div>\n        <div>\n            <strong style=\"color:#3d5a96;\">Herramienta</strong>\n            <ul>\n                <li>Lee en voz alta.</li>\n                <li>Compara con tu documento original.</li>\n                <li>Pide a otra persona que lo lea.</li>\n            </ul>\n        </div>\n    </div>\n    <div class=\"block block-pink\">\n        Un texto con errores en la app se percibe como un negocio descuidado, aunque el cálculo esté bien.\n    </div>\n    "
+    },
+    {
+        "titulo": "Datos inventados",
+        "num": "8 / 33",
+        "body": "\n    <div class=\"block block-vino\">\n        <div class=\"block-title\">Qué es una alucinación</div>\n        Información que suena verdadera pero es falsa: un precio, una dirección, una promesa o una estadística que la IA completó por su cuenta.\n    </div>\n    <ul style=\"margin-top:10px;\">\n        <li>Aparece cuando falta un dato en el prompt.</li>\n        <li>Suele ser plausible y difícil de notar.</li>\n        <li>Se previene pidiendo \"no inventes, marca pendiente\".</li>\n        <li>Se detecta comparando con tu fuente real.</li>\n    </ul>\n    "
+    },
+    {
+        "titulo": "Cómo detectar alucinaciones",
+        "num": "9 / 33",
+        "body": "\n    <ol style=\"font-size:17px;line-height:2.1;\">\n        <li>Pregunta de dónde salió el dato.</li>\n        <li>Compara con tu lista de precios o documento original.</li>\n        <li>Desconfía de cifras redondas o demasiado específicas.</li>\n        <li>Busca datos que tú no proporcionaste.</li>\n        <li>Revisa que las fechas tengan sentido.</li>\n    </ol>\n    <div class=\"block block-blue\">\n        <div class=\"block-title\">Pregunta clave</div>\n        \"¿Este dato estaba en lo que yo te di?\" Si la respuesta es no, bórralo o corrígelo.\n    </div>\n    "
+    },
+    {
+        "titulo": "Tabla de verificación",
+        "num": "10 / 33",
+        "body": "\n    <table>\n        <tr><th>Qué revisar</th><th>Cómo</th><th>Resultado</th></tr>\n        <tr><td>Totales</td><td>Calculadora</td><td>Coincide / no coincide</td></tr>\n        <tr><td>Precios</td><td>Contra lista vigente</td><td>Correcto / desactualizado</td></tr>\n        <tr><td>Nombres</td><td>Contra el pedido</td><td>Correcto / corregido</td></tr>\n        <tr><td>Fechas</td><td>Calendario</td><td>Vigente / vencida</td></tr>\n        <tr><td>Textos</td><td>Lectura completa</td><td>Sin errores / con errores</td></tr>\n        <tr><td>Datos personales</td><td>Búsqueda en la app</td><td>Ninguno / encontrado</td></tr>\n    </table>\n    "
+    },
+    {
+        "titulo": "Datos personales",
+        "num": "11 / 33",
+        "body": "\n    <p style=\"font-size:17px;line-height:1.7;\">Son datos que permiten identificar a una persona. En una app pública no deben aparecer.</p>\n    <div class=\"columns\">\n        <div>\n            <strong style=\"color:#3d5a96;\">Ejemplos</strong>\n            <ul>\n                <li>Nombre completo y teléfono.</li>\n                <li>Dirección o ubicación exacta.</li>\n                <li>Correo personal.</li>\n                <li>Identificaciones y números de cuenta.</li>\n            </ul>\n        </div>\n        <div>\n            <strong style=\"color:#3d5a96;\">Riesgo</strong>\n            <ul>\n                <li>Fraudes y llamadas no deseadas.</li>\n                <li>Problemas legales para el negocio.</li>\n                <li>Pérdida de confianza.</li>\n            </ul>\n        </div>\n    </div>\n    "
+    },
+    {
+        "titulo": "Qué no poner en una app pública",
+        "num": "12 / 33",
+        "body": "\n    <div class=\"block block-vino\">\n        <div class=\"block-title\">Lista negra</div>\n        <ul>\n            <li>Contraseñas o claves de acceso.</li>\n            <li>Números de tarjeta o cuentas bancarias.</li>\n            <li>Identificaciones oficiales.</li>\n            <li>Datos de salud o de menores.</li>\n            <li>Listas de clientes con contacto.</li>\n        </ul>\n    </div>\n    <div class=\"block block-blue\" style=\"margin-top:10px;\">\n        <div class=\"block-title\">Alternativa segura</div>\n        Usa datos de ejemplo, nombres ficticios y un botón de WhatsApp que abra el chat sin mostrar el número de terceros.\n    </div>\n    "
+    },
+    {
+        "titulo": "Aviso de privacidad básico",
+        "num": "13 / 33",
+        "body": "\n    <p style=\"font-size:17px;line-height:1.7;\">Si tu app pide datos, necesitas explicar para qué los usas.</p>\n    <ul>\n        <li>Qué datos solicitas.</li>\n        <li>Para qué los usarás.</li>\n        <li>Con quién los compartes.</li>\n        <li>Cómo puede el cliente pedir que los borres.</li>\n        <li>Un correo de contacto del negocio.</li>\n    </ul>\n    <div class=\"block block-pink\">\n        Para un negocio pequeño, un texto breve y claro suele ser suficiente. Si manejas datos delicados, consulta a un especialista.\n    </div>\n    "
+    },
+    {
+        "titulo": "Contraseñas y accesos",
+        "num": "14 / 33",
+        "body": "\n    <ul style=\"font-size:17px;line-height:2.1;\">\n        <li>Nunca escribas contraseñas dentro de la app.</li>\n        <li>No compartas tus claves con la IA.</li>\n        <li>Usa una cuenta de Google exclusiva del negocio.</li>\n        <li>Activa la verificación en dos pasos.</li>\n        <li>Cambia la contraseña si sospechas que se expuso.</li>\n    </ul>\n    <div class=\"block block-vino\">\n        Si una app necesita una clave para funcionar, probablemente necesita un especialista, no un prompt.\n    </div>\n    "
+    },
+    {
+        "titulo": "Capturas y evidencia",
+        "num": "15 / 33",
+        "body": "\n    <div class=\"columns\">\n        <div>\n            <strong style=\"color:#3d5a96;\">Qué guardar</strong>\n            <ul>\n                <li>Captura de la app funcionando.</li>\n                <li>Captura del prompt usado.</li>\n                <li>Tabla de pruebas.</li>\n                <li>Resultado de la revisión.</li>\n            </ul>\n        </div>\n        <div>\n            <strong style=\"color:#3d5a96;\">Para qué</strong>\n            <ul>\n                <li>Demostrar el trabajo.</li>\n                <li>Comparar versiones.</li>\n                <li>Resolver dudas después.</li>\n            </ul>\n        </div>\n    </div>\n    <div class=\"block block-blue\">\n        Nombra las capturas con fecha: 2026-04-15_prueba_iva.png.\n    </div>\n    "
+    },
+    {
+        "titulo": "Documentar la revisión",
+        "num": "16 / 33",
+        "body": "\n    <table>\n        <tr><th>Fecha</th><th>Qué se revisó</th><th>Resultado</th><th>Acción</th></tr>\n        <tr><td>15/04</td><td>Cálculo de IVA</td><td>Error</td><td>Corregido y probado</td></tr>\n        <tr><td>15/04</td><td>Textos</td><td>Sin errores</td><td>Ninguna</td></tr>\n        <tr><td>16/04</td><td>Datos personales</td><td>Ninguno</td><td>Ninguna</td></tr>\n        <tr><td>16/04</td><td>Diseño móvil</td><td>Botón pequeño</td><td>Ajustado</td></tr>\n    </table>\n    <div class=\"block\">\n        Una tabla simple es suficiente. Lo importante es que puedas demostrar qué revisaste.\n    </div>\n    "
+    },
+    {
+        "titulo": "Checklist de seguridad",
+        "num": "17 / 33",
+        "body": "\n    <ul style=\"font-size:17px;line-height:2.1;\">\n        <li>No hay contraseñas ni claves en el proyecto.</li>\n        <li>No hay nombres ni teléfonos de clientes.</li>\n        <li>Los datos de prueba son ficticios.</li>\n        <li>El aviso de privacidad está visible si pides datos.</li>\n        <li>La cuenta tiene verificación en dos pasos.</li>\n        <li>Guardé una copia de la app.</li>\n        <li>Documenté la revisión.</li>\n    </ul>\n    "
+    },
+    {
+        "titulo": "Errores comunes",
+        "num": "18 / 33",
+        "body": "\n    <table>\n        <tr><th>Error</th><th>Riesgo</th><th>Solución</th></tr>\n        <tr><td>Confiar en la primera versión</td><td>Errores visibles</td><td>Probar y revisar</td></tr>\n        <tr><td>Usar datos reales para probar</td><td>Exposición</td><td>Datos ficticios</td></tr>\n        <tr><td>No revisar textos</td><td>Mala imagen</td><td>Lectura completa</td></tr>\n        <tr><td>Ignorar el celular</td><td>Cliente no puede usarla</td><td>Probar en teléfono</td></tr>\n        <tr><td>No documentar</td><td>No puedes demostrar</td><td>Bitácora simple</td></tr>\n    </table>\n    "
+    },
+    {
+        "titulo": "Caso: el precio inventado",
+        "num": "19 / 33",
+        "body": "\n    <div class=\"block block-vino\">\n        <div class=\"block-title\">Situación</div>\n        La app muestra \"ramo premium $1,200\". En la lista real el precio es $950. La IA completó el dato porque el producto no estaba en la lista.\n    </div>\n    <div class=\"block block-blue\">\n        <div class=\"block-title\">Qué hacer</div>\n        Corregir el precio, agregar el producto a la lista y escribir en el prompt: \"si el producto no está en la lista, no lo muestres\".\n    </div>\n    <div class=\"block\">\n        <div class=\"block-title\">Aprendizaje</div>\n        Los datos faltantes se convierten en invenciones. La solución es cerrar el hueco, no solo corregir el número.\n    </div>\n    "
+    },
+    {
+        "titulo": "Caso: el dato expuesto",
+        "num": "20 / 33",
+        "body": "\n    <div class=\"block block-vino\">\n        <div class=\"block-title\">Situación</div>\n        Una app de pedidos mostraba el teléfono personal de la dueña en el código, visible para cualquiera.\n    </div>\n    <div class=\"block block-blue\">\n        <div class=\"block-title\">Qué hacer</div>\n        Reemplazarlo por el número comercial, usar un enlace de WhatsApp y revisar que no queden otros datos en el proyecto.\n    </div>\n    <div class=\"block block-pink\">\n        <div class=\"block-title\">Prevención</div>\n        Antes de publicar, busca en el proyecto palabras como \"teléfono\", \"dirección\" o \"@\".\n    </div>\n    "
+    },
+    {
+        "titulo": "Política simple de datos",
+        "num": "21 / 33",
+        "body": "\n    <div class=\"block block-blue\">\n        <div class=\"block-title\">Escribe tu política en cinco líneas</div>\n        <ol>\n            <li>Qué datos pide la app.</li>\n            <li>Para qué se usan.</li>\n            <li>Dónde se guardan.</li>\n            <li>Quién puede verlos.</li>\n            <li>Cómo se eliminan.</li>\n        </ol>\n    </div>\n    <div class=\"block\">\n        Tenerla por escrito evita decisiones improvisadas y te ayuda si un cliente pregunta.\n    </div>\n    "
+    },
+    {
+        "titulo": "Roles y responsabilidades",
+        "num": "22 / 33",
+        "body": "\n    <table>\n        <tr><th>Rol</th><th>Responsabilidad</th></tr>\n        <tr><td>Dueño del negocio</td><td>Decide qué se publica y qué datos se usan</td></tr>\n        <tr><td>Quien construye</td><td>Revisa cálculos, textos y seguridad</td></tr>\n        <tr><td>Quien usa la app</td><td>Reporta errores y no introduce datos sensibles</td></tr>\n        <tr><td>Especialista</td><td>Apoya en temas legales o técnicos complejos</td></tr>\n    </table>\n    <div class=\"block block-pink\">\n        Si una sola persona hace todo, al menos separa los momentos: construye, revisa y publica en días distintos.\n    </div>\n    "
+    },
+    {
+        "titulo": "Actividad práctica",
+        "num": "23 / 33",
+        "body": "\n    <p style=\"font-size:17px;margin-bottom:10px;\"><strong>Meta:</strong> revisar y proteger una app antes de compartirla.</p>\n    <ol style=\"font-size:16px;line-height:2;\">\n        <li>Toma la app del tema anterior.</li>\n        <li>Aplica la tabla de verificación.</li>\n        <li>Busca datos personales en el proyecto.</li>\n        <li>Corrige lo que encuentres.</li>\n        <li>Documenta la revisión con capturas.</li>\n        <li>Entrega la tabla y la evidencia.</li>\n    </ol>\n    <div class=\"block block-blue\">\n        <div class=\"block-title\">Entregable</div>\n        Un PDF con la tabla de verificación, las correcciones y la captura de la app revisada.\n    </div>\n    "
+    },
+    {
+        "titulo": "Rúbrica de la actividad",
+        "num": "24 / 33",
+        "body": "\n    <table>\n        <tr><th>Criterio</th><th>Peso</th><th>Qué se observa</th></tr>\n        <tr><td>Verificación de cálculos</td><td>30%</td><td>Tres casos comparados</td></tr>\n        <tr><td>Revisión de textos</td><td>20%</td><td>Correcciones documentadas</td></tr>\n        <tr><td>Seguridad de datos</td><td>30%</td><td>Sin datos personales</td></tr>\n        <tr><td>Evidencia</td><td>20%</td><td>Capturas y bitácora</td></tr>\n    </table>\n    "
+    },
+    {
+        "titulo": "Resumen",
+        "num": "25 / 33",
+        "body": "\n    <ul style=\"font-size:17px;line-height:2.2;\">\n        <li>Revisar es parte del trabajo, no un extra.</li>\n        <li>Los cálculos se comprueban con una calculadora y una tabla.</li>\n        <li>Los datos inventados se detectan comparando con la fuente.</li>\n        <li>Una app pública no debe contener datos personales.</li>\n        <li>Documentar la revisión te protege y te ayuda a mejorar.</li>\n    </ul>\n    <div class=\"block center\" style=\"margin-top:15px;\">\n        <div class=\"block-title\">Frase final</div>\n        <em>\"La confianza del cliente se gana con datos correctos y se pierde con uno solo mal manejado.\"</em>\n    </div>\n    "
+    },
+    {
+        "titulo": "Autoevaluación",
+        "num": "26 / 33",
+        "body": "\n    <ol style=\"font-size:17px;line-height:2.3;\">\n        <li>¿Qué es una alucinación de la IA?</li>\n        <li>¿Cómo compruebas un cálculo de la app?</li>\n        <li>Menciona tres datos que nunca deben estar en una app pública.</li>\n        <li>¿Qué debe contener un aviso de privacidad básico?</li>\n        <li>¿Por qué conviene documentar la revisión?</li>\n    </ol>\n    "
+    },
+    {
+        "titulo": "Glosario",
+        "num": "27 / 33",
+        "body": "\n    <table style=\"font-size:14px;\">\n        <tr><th>Término</th><th>Significado</th></tr>\n        <tr><td>Alucinación</td><td>Dato falso que la IA presenta como verdadero.</td></tr>\n        <tr><td>Dato personal</td><td>Información que identifica a una persona.</td></tr>\n        <tr><td>Aviso de privacidad</td><td>Texto que explica qué datos se usan y para qué.</td></tr>\n        <tr><td>Bitácora</td><td>Registro de revisiones y cambios.</td></tr>\n        <tr><td>Evidencia</td><td>Capturas y pruebas que demuestran el trabajo.</td></tr>\n    </table>\n    "
+    },
+    {
+        "titulo": "Recursos",
+        "num": "28 / 33",
+        "body": "\n    <div class=\"block block-blue\">\n        <div class=\"block-title\">Fuentes para verificar</div>\n        <ul>\n            <li>Tu lista de precios vigente.</li>\n            <li>Los documentos del negocio.</li>\n            <li>La calculadora del teléfono.</li>\n            <li>La persona responsable del área.</li>\n        </ul>\n    </div>\n    <div class=\"block\">\n        <div class=\"block-title\">Herramientas</div>\n        <ul>\n            <li>Capturas de pantalla del sistema.</li>\n            <li>Una hoja de cálculo para la bitácora.</li>\n            <li>La vista previa de AI Studio.</li>\n        </ul>\n    </div>\n    "
+    },
+    {
+        "titulo": "Preguntas frecuentes",
+        "num": "29 / 33",
+        "body": "\n    <div class=\"block block-blue\">\n        <div class=\"block-title\">¿Tengo que revisar todo cada vez?</div>\n        Al principio sí. Después puedes crear una lista de verificación y revisar solo lo que cambió.\n    </div>\n    <div class=\"block block-pink\">\n        <div class=\"block-title\">¿Y si la app es solo para mí?</div>\n        Aun así revisa: un error interno también te cuesta dinero y tiempo.\n    </div>\n    <div class=\"block block-vino\">\n        <div class=\"block-title\">¿Puedo usar datos reales para probar?</div>\n        Mejor no. Usa datos ficticios y, si necesitas reales, anonimízalos.\n    </div>\n    "
+    },
+    {
+        "titulo": "Plantilla de verificación",
+        "num": "30 / 33",
+        "body": "\n    <table style=\"font-size:14px;\">\n        <tr><th>Punto</th><th>Sí</th><th>No</th><th>Nota</th></tr>\n        <tr><td>Totales correctos</td><td>☐</td><td>☐</td><td></td></tr>\n        <tr><td>Precios vigentes</td><td>☐</td><td>☐</td><td></td></tr>\n        <tr><td>Textos sin errores</td><td>☐</td><td>☐</td><td></td></tr>\n        <tr><td>Sin datos personales</td><td>☐</td><td>☐</td><td></td></tr>\n        <tr><td>Se ve bien en celular</td><td>☐</td><td>☐</td><td></td></tr>\n        <tr><td>Respaldo guardado</td><td>☐</td><td>☐</td><td></td></tr>\n    </table>\n    "
+    },
+    {
+        "titulo": "Consejos finales",
+        "num": "31 / 33",
+        "body": "\n    <ul style=\"font-size:17px;line-height:2.2;\">\n        <li>Revisa con calma, no con prisa.</li>\n        <li>Pide a otra persona que use la app.</li>\n        <li>Anota cada error: es tu mejor material de mejora.</li>\n        <li>Corrige y vuelve a probar el mismo caso.</li>\n        <li>Guarda la evidencia antes de publicar.</li>\n    </ul>\n    <div class=\"block block-blue\">\n        La revisión es la diferencia entre una app \"que se ve bien\" y una app confiable.\n    </div>\n    "
+    },
+    {
+        "titulo": "Cierre del tema",
+        "num": "32 / 33",
+        "body": "\n    <div class=\"block block-vino center\" style=\"font-size:18px;\">\n        <strong>Revisar → corregir → documentar → compartir</strong>\n    </div>\n    <p style=\"font-size:17px;margin-top:15px;\">Con este tema cierras la parte de construcción y entras a la publicación. En el siguiente tema verás cómo compartir tu app con un enlace de forma segura.</p>\n    <div class=\"block\">\n        <div class=\"block-title\">Antes de continuar</div>\n        Asegúrate de tener tu app revisada, corregida y con evidencia. Será el insumo de la práctica final.\n    </div>\n    "
+    },
+    {
+        "titulo": "Gracias por su atención",
+        "num": "33 / 33",
+        "body": "<div class=\"final\">\n            <h2>¿Dudas o comentarios?</h2>\n            <p>Participa en el foro del tema</p>\n            <p style=\"margin-top:30px;color:#3d5a96;font-weight:700;\">ICATHI 4.0 — Inteligencia Artificial para tu Negocio</p>\n        </div>"
+    }
+];
+
+let actual = 0;
+
+function renderSlide(i) {
+    const s = slides[i];
+    const c = document.getElementById('slides-container');
+    if (s.tipo === 'portada') {
+        c.innerHTML = '<div class="slide portada">' +
+            '<div class="portada-bg"></div>' +
+            '<div class="franja1"></div><div class="franja2"></div><div class="franja3"></div><div class="franja4"></div>' +
+            '<div class="portada-content">' +
+            '<div class="campus">CAMPUS VIRTUAL</div>' +
+            '<h1>Inteligencia Artificial<span>para tu Negocio</span></h1>' +
+            '<div class="tema-label">' + PORTADA.etiqueta + '</div>' +
+            '<div class="tema">' + PORTADA.tema + '</div>' +
+            '<div class="instituto">' + PORTADA.instituto + '</div>' +
+            '<div class="fecha">2026</div>' +
+            '</div></div>';
+    } else {
+        c.innerHTML = '<div class="slide">' +
+            '<div class="slide-header"><h2>' + s.titulo + '</h2><span class="num">' + s.num + '</span></div>' +
+            '<div class="slide-body">' + s.body + '</div>' +
+            '<div class="slide-footer"><span>ICATHI 4.0</span><span>' + s.num + '</span></div>' +
+            '</div>';
+    }
+    document.getElementById('counter').textContent = 'Diapositiva ' + (i + 1) + ' de ' + slides.length;
+    document.querySelectorAll('.nav-bar button').forEach((b, idx) => {
+        b.classList.toggle('activo', idx === i);
+    });
+}
+
+function sig() {
+    if (actual < slides.length - 1) { actual++; renderSlide(actual); }
+}
+function ant() {
+    if (actual > 0) { actual--; renderSlide(actual); }
+}
+
+// Nav bar
+document.addEventListener('DOMContentLoaded', () => {
+    const nav = document.createElement('div');
+    nav.className = 'nav-bar';
+    slides.forEach((_, i) => {
+        const b = document.createElement('button');
+        b.textContent = i + 1;
+        b.onclick = () => { actual = i; renderSlide(i); };
+        nav.appendChild(b);
+    });
+    document.body.insertBefore(nav, document.querySelector('.nav-controls'));
+    renderSlide(0);
+});
+</script>
+
+</body>
+</html>
